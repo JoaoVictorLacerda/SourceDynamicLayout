@@ -3,16 +3,16 @@ package DynamicLayout;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class DynamicLayout implements LayoutManager2{
+public class DynamicLayout implements LayoutManager2 {
     /**
      * @author João Victor Lacerda de Queiroz
      */
 
-    private ArrayList<Component> elementos = new ArrayList<Component>();
-    private ArrayList<Integer> percentsWid = new ArrayList<Integer>();
-    private ArrayList<Integer> percentsHeig = new ArrayList<Integer>();
-    private ArrayList<Integer> percentsPositionsX = new ArrayList<Integer>();
-    private ArrayList<Integer> percentsPositionsY = new ArrayList<Integer>();
+    private final ArrayList<Component> ELEMENTOS = new ArrayList<Component>();
+    private final ArrayList<Integer> PERCENTS_WIDTH = new ArrayList<Integer>();
+    private final ArrayList<Integer> PERCENTS_HEIGHT = new ArrayList<Integer>();
+    private final ArrayList<Integer> PERCENTS_POSITIONS_X = new ArrayList<Integer>();
+    private final ArrayList<Integer> PERCENTS_POSITIONS_Y = new ArrayList<Integer>();
 
     int width,height;
 
@@ -29,13 +29,14 @@ public class DynamicLayout implements LayoutManager2{
     public void addLayoutComponent(String name, Component comp) {
         synchronized (comp.getTreeLock()) {
             /**
-             * Esse array de elementos é responsável por guardar todos os filhos
+             * Esse array de ELEMENTOS é responsável por guardar todos os filhos
              * de um pai que implementou o DynamicLayout (Seja um JFrame ou um JPanel).
              *
              * Com esses componentes armazenados em um arrayList, é possível trabalhar
              * com seus tamanhos e posições separadamente
              */
-            elementos.add(comp);
+            ELEMENTOS.add(comp);
+
             /**
              * Os outros ArrayLists são usados no armazenamento da porcentagem
              * de um x elemento de acordo com o seu elemento pai.
@@ -53,13 +54,13 @@ public class DynamicLayout implements LayoutManager2{
              * E o mesmo vale para as posições x e y
              *
              */
-            percentsWid.add(this.getPercent(this.width,comp.getWidth()));
-            percentsHeig.add(this.getPercent(this.height, comp.getHeight()));
+            PERCENTS_WIDTH.add(this.getPercent(this.width,comp.getWidth()));
+            PERCENTS_HEIGHT.add(this.getPercent(this.height, comp.getHeight()));
 
-            this.percentsPositionsX.add(this.getPercent(this.width,
+            this.PERCENTS_POSITIONS_X.add(this.getPercent(this.width,
                     (int) comp.getLocation().getX()));
 
-            this.percentsPositionsY.add(this.getPercent(this.height,
+            this.PERCENTS_POSITIONS_Y.add(this.getPercent(this.height,
                     (int) comp.getLocation().getY()));
 
         }
@@ -75,7 +76,7 @@ public class DynamicLayout implements LayoutManager2{
         int height = target.getHeight();
         int width = target.getWidth();
         int cont =0;
-        for (Component c: this.elementos) {
+        for (Component c: this.ELEMENTOS) {
             int widthFinal = geraTamanhoWid(width, cont);
             int heightFinal = geraTamanhoHeig(height, cont);
 
@@ -94,18 +95,18 @@ public class DynamicLayout implements LayoutManager2{
     }
 
     private int geraPositionX(int tamPai,int cont){
-        return (this.percentsPositionsX.get(cont)*tamPai)/100;
+        return (this.PERCENTS_POSITIONS_X.get(cont)*tamPai)/100;
     }
 
     private int geraPositionY(int tamPai,int cont){
-        return (this.percentsPositionsY.get(cont)*tamPai)/100;
+        return (this.PERCENTS_POSITIONS_Y.get(cont)*tamPai)/100;
     }
     private int geraTamanhoWid(int tamPai, int cont){
-        return ((this.percentsWid.get(cont) * (tamPai))/100);
+        return ((this.PERCENTS_WIDTH.get(cont) * (tamPai))/100);
     }
 
     private int geraTamanhoHeig(int tamPai, int cont){
-        return ((this.percentsHeig.get(cont) * tamPai)/100);
+        return ((this.PERCENTS_HEIGHT.get(cont) * tamPai)/100);
     }
     //métodos não utilizados 07/05/2021
     @Override
