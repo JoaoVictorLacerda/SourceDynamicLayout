@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DynamicLayout:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DynamicLayout_jar</output-path>
+    <root id="archive" name="DynamicLayout.jar">
+      <element id="module-output" name="DynamicLayout" />
+    </root>
+  </artifact>
+</component>
