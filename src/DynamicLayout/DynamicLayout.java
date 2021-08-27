@@ -1,9 +1,6 @@
 package DynamicLayout;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.LayoutManager2;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -13,10 +10,14 @@ import java.util.Iterator;
          * @author João Victor Lacerda de Queiroz
          */
         private ArrayList<Component> elementos = new ArrayList();
-        private ArrayList<Integer> percentsWid = new ArrayList();
-        private ArrayList<Integer> percentsHeig = new ArrayList();
-        private ArrayList<Integer> percentsPositionsX = new ArrayList();
-        private ArrayList<Integer> percentsPositionsY = new ArrayList();
+        private ArrayList<Font> fontsOfElements = new ArrayList();
+
+        private ArrayList<Byte> percentsWid = new ArrayList();
+        private ArrayList<Byte> percentsHeig = new ArrayList();
+        private ArrayList<Byte> percentsPositionsX = new ArrayList();
+        private ArrayList<Byte> percentsPositionsY = new ArrayList();
+        private ArrayList<Byte> percentsFonts = new ArrayList();
+
         int width;
         int height;
 
@@ -60,10 +61,11 @@ import java.util.Iterator;
                  * E o mesmo vale para as posições x e y
                  *
                  */
-                this.percentsWid.add(this.getPercent(this.width, comp.getWidth()));
-                this.percentsHeig.add(this.getPercent(this.height, comp.getHeight()));
-                this.percentsPositionsX.add(this.getPercent(this.width, (int)comp.getLocation().getX()));
-                this.percentsPositionsY.add(this.getPercent(this.height, (int)comp.getLocation().getY()));
+                this.percentsWid.add((byte) this.getPercent(this.width, comp.getWidth()));
+                this.percentsHeig.add((byte) this.getPercent(this.height, comp.getHeight()));
+                this.percentsPositionsX.add((byte) this.getPercent(this.width, (int)comp.getLocation().getX()));
+                this.percentsPositionsY.add((byte) this.getPercent(this.height, (int)comp.getLocation().getY()));
+                this.percentsFonts.add((byte) this.getPercent(comp.getWidth(), comp.getFont().getSize()));
             }
         }
 
@@ -76,11 +78,22 @@ import java.util.Iterator;
             int width = target.getWidth();
             int cont = 0;
 
-            for(Iterator var5 = this.elementos.iterator(); var5.hasNext(); ++cont) {
-                Component c = (Component)var5.next();
+            for(Iterator elemento = this.elementos.iterator(); elemento.hasNext(); ++cont) {
+                Component c = (Component)elemento.next();
                 int widthFinal = this.geraTamanhoWid(width, cont);
                 int heightFinal = this.geraTamanhoHeig(height, cont);
                 c.setBounds(this.geraPositionX(width, cont), this.geraPositionY(height, cont), widthFinal, heightFinal);
+
+                if(c.getFont() != null){
+                    Font font = c.getFont();
+                    int tamanhoFontFinal = this.geraTamanhoFont(widthFinal, cont);
+                    if(tamanhoFontFinal >= (heightFinal-5)){
+                        tamanhoFontFinal = heightFinal-15;
+                    }
+                    c.setFont(new Font(font.getFontName(),font.getStyle(), tamanhoFontFinal));
+
+                    font= null;
+                }
             }
 
         }
@@ -90,19 +103,24 @@ import java.util.Iterator;
         }
 
         private int geraPositionX(int tamPai, int cont) {
-            return (Integer)this.percentsPositionsX.get(cont) * tamPai / 100;
+            return this.percentsPositionsX.get(cont) * tamPai / 100;
         }
 
         private int geraPositionY(int tamPai, int cont) {
-            return (Integer)this.percentsPositionsY.get(cont) * tamPai / 100;
+            return this.percentsPositionsY.get(cont) * tamPai / 100;
         }
 
         private int geraTamanhoWid(int tamPai, int cont) {
-            return (Integer)this.percentsWid.get(cont) * tamPai / 100;
+
+            return this.percentsWid.get(cont) * tamPai / 100;
         }
 
         private int geraTamanhoHeig(int tamPai, int cont) {
-            return (Integer)this.percentsHeig.get(cont) * tamPai / 100;
+            return this.percentsHeig.get(cont) * tamPai / 100;
+        }
+
+        private int geraTamanhoFont(int tamPai, int cont){
+            return this.percentsFonts.get(cont) * tamPai / 100;
         }
 
         public Dimension preferredLayoutSize(Container parent) {
