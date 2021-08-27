@@ -87,8 +87,8 @@ import java.util.Iterator;
                 if(c.getFont() != null){
                     Font font = c.getFont();
                     int tamanhoFontFinal = this.geraTamanhoFont(widthFinal, cont);
-                    if(tamanhoFontFinal >= (heightFinal-5)){
-                        tamanhoFontFinal = heightFinal-15;
+                    if(tamanhoFontFinal >= (heightFinal-8)){
+                        tamanhoFontFinal = heightFinal-13;
                     }
                     c.setFont(new Font(font.getFontName(),font.getStyle(), tamanhoFontFinal));
 
